@@ -42,4 +42,11 @@ jobs:
           registry: ${{ vars.JF_HOST }}
           username: ${{ steps.setup-cli.outputs.oidc-user }}
           password: ${{ steps.setup-cli.outputs.oidc-token }}
-      
+        # docker image build
+      - name: Build and Push Docker image
+        uses: docker/build-push-action@v5
+        id: build
+        with:
+            push: true
+            platforms: linux/amd64 , linux/arm64/v8
+            tags: ${{ vars.JF_HOST }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}
