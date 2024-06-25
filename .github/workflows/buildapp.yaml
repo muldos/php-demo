@@ -13,11 +13,17 @@ jobs:
       actions: read 
       attestations: write    
       packages: write
-    # Here we install all the tools : docker buildx, QEMU, JDK 11, JFrog CLI
+    # Here we install all the tools : docker buildx, QEMU, JFrog CLI, PHP - Composer
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       # Install prerequisites
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Setup JFrog CLI
         id: setup-cli
         uses: jfrog/setup-jfrog-cli@v4
@@ -44,9 +50,9 @@ jobs:
           password: ${{ steps.setup-cli.outputs.oidc-token }}
         # docker image build
       - name: Build and Push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         id: build
         with:
             push: true
-            platforms: linux/amd64 , linux/arm64/v8
+            platforms: linux/amd64,linux/arm64/
             tags: ${{ vars.JF_HOST }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}
