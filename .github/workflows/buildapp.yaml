@@ -33,7 +33,8 @@ jobs:
         with:
             php_version: latest
             version: latest
-            args: "--prefer-dist --optimize-autoloader"
+            #args: "--prefer-dist --optimize-autoloader"
+            command: "config repo.packagist false"
         env:
           COMPOSER_AUTH: '{"http-basic": {"${{vars.JF_HOST}}": {"username": "${{steps.setup-cli.outputs.oidc-user}}","password": "${{steps.setup-cli.outputs.oidc-token}}"}}}'
       - name: Authenticate Docker
