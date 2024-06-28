@@ -88,3 +88,6 @@ Then go to https://localhost (accept the message about wrong certificates), and 
 ![JFrog demo PHP app](docs/img/app-preview.png)
 
 ## CI Integration
+
+You can use the [YAML Workflow file](.github/workflows/buildapp.yaml) as an example on how to integrate with the JFrog platform to fetch dependencies, publish the produced docker image to artifactory and produce a build-info to store provenance informations.
+
