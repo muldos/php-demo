@@ -56,3 +56,31 @@ jobs:
             push: true
             platforms: linux/amd64,linux/arm64/v8
             tags: ${{ vars.JF_HOST }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}
+      - name: Docker Scan
+        id: docker-scan
+        run: |  
+          jf rt bce ${{ env.JFROG_CLI_BUILD_NAME }} $GITHUB_RUN_NUMBER 
+          jf rt bag ${{ env.JFROG_CLI_BUILD_NAME }} $GITHUB_RUN_NUMBER
+          echo "digest=$(docker images --no-trunc --quiet ${{ vars.JF_HOST }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }})" >> $GITHUB_OUTPUT
+          jf docker pull ${{ vars.JF_HOST }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}
+          jf docker scan ${{ vars.JF_HOST }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}
+        # adding the built docker into the JFrog build info
+      - name: add docker package to build
+        env:
+          JFROG_CLI_BUILD_NAME: 'gh-ejs-demo'
+          JF_URL: https://${{ vars.JF_HOST }}/
+          JF_PROJECT: ${{ vars.JF_PROJECT_KEY }}
+        run: |
+          echo "${{ vars.JF_HOST }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}" > metadata.json
+          jf rt build-docker-create ${{ env.DOCKER_REPO }} --image-file metadata.json --build-name $JFROG_CLI_BUILD_NAME --build-number $GITHUB_RUN_NUMBER
+      - name: Publish build info & scan build
+        id: publish-build  
+        env:
+          JFROG_CLI_BUILD_NAME: 'gh-ejs-demo'
+          JF_URL: https://${{ vars.JF_HOST }}/
+          JF_PROJECT: ${{ vars.JF_PROJECT_KEY }}
+        run: |
+           echo ${{ vars.JF_HOST }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.ImageID }} > ./image-details.txt
+           jf rt bdc ${{ env.DOCKER_REPO }} --image-file ./image-details.txt --build-name $JFROG_CLI_BUILD_NAME --build-number $GITHUB_RUN_NUMBER
+           jf rt bp $JFROG_CLI_BUILD_NAME $GITHUB_RUN_NUMBER
+           jf rt bs $JFROG_CLI_BUILD_NAME $GITHUB_RUN_NUMBER
