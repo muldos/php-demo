@@ -1,6 +1,9 @@
 name: "github-php-build"
 on: 
-  workflow_dispatch:
+  schedule:
+  - cron: "0 0 * * *"
+  # if needed to run manually, comment the 2 line above and uncomment this one
+  #  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
