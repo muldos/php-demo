@@ -86,3 +86,5 @@ docker run -p 80:80 -p 443:443 -p 443:443/udp --tty my-php-app
 Then go to https://localhost (accept the message about wrong certificates), and you should see the application home page, including the Symfony profiler toolbar
 
 ![JFrog demo PHP app](docs/img/app-preview.png)
+
+## CI Integration
