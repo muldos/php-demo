@@ -67,7 +67,7 @@ jobs:
         # adding the built docker into the JFrog build info
       - name: add docker package to build
         env:
-          JFROG_CLI_BUILD_NAME: 'gh-ejs-demo'
+          JFROG_CLI_BUILD_NAME: 'gh-php-demo'
           JF_URL: https://${{ vars.JF_HOST }}/
           JF_PROJECT: ${{ vars.JF_PROJECT_KEY }}
         run: |
@@ -76,7 +76,7 @@ jobs:
       - name: Publish build info & scan build
         id: publish-build  
         env:
-          JFROG_CLI_BUILD_NAME: 'gh-ejs-demo'
+          JFROG_CLI_BUILD_NAME: 'gh-php-demo'
           JF_URL: https://${{ vars.JF_HOST }}/
           JF_PROJECT: ${{ vars.JF_PROJECT_KEY }}
         run: |
