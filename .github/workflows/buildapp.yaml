@@ -26,7 +26,9 @@ jobs:
       
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
+# Here we leverage the Github / Jfrog OIDC integration capabilities
+# Note that no long lived credentials is used, only hostname and project key
+# See https://jfrog.com/blog/secure-access-development-jfrog-github-oidc/
       - name: Setup JFrog CLI
         id: setup-cli
         uses: jfrog/setup-jfrog-cli@v4

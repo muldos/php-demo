@@ -91,3 +91,6 @@ Then go to https://localhost (accept the message about wrong certificates), and 
 
 You can use the [YAML Workflow file](.github/workflows/buildapp.yaml) as an example on how to integrate with the JFrog platform to fetch dependencies, publish the produced docker image to artifactory and produce a build-info to store provenance informations.
 
+This github action worklofw is leveraging [Github / JFrog OIDC Integration](https://jfrog.com/blog/secure-access-development-jfrog-github-oidc/).
+
+
