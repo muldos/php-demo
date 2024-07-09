@@ -38,15 +38,16 @@ jobs:
         with:
             oidc-provider-name: davidro-github-integration
             oidc-audience: davidro-github
-      - name: Composer Installation
-        id: setup-composer-php
-        uses: php-actions/composer@v6
+      - name: PHP installation
+        uses: "shivammathur/setup-php@v2"
         with:
-            php_version: latest
-            version: latest
-            #args: "--prefer-dist --optimize-autoloader"
+          php-version: "latest"
+      - name: Composer build
+        uses: "ramsey/composer-install@v3"
         env:
           COMPOSER_AUTH: '{"http-basic": {"${{vars.JF_HOST}}": {"username": "${{steps.setup-cli.outputs.oidc-user}}","password": "${{steps.setup-cli.outputs.oidc-token}}"}}}'
+        with:
+            ignore-cache: "yes"
       - name: Review install & fix permissions
         id: review-php  
         run: |
@@ -64,13 +65,13 @@ jobs:
       - name: Build and Push Docker image
         uses: docker/build-push-action@v6
         id: build
-        env:
-          COMPOSER_AUTH: '{"http-basic": {"${{vars.JF_HOST}}": {"username": "${{steps.setup-cli.outputs.oidc-user}}","password": "${{steps.setup-cli.outputs.oidc-token}}"}}}'
         with:
             push: true
             provenance: false
             platforms: linux/amd64,linux/arm64,linux/arm64/v7
             tags: ${{ vars.JF_HOST }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}
+            build-args: |
+              COMPOSER_AUTH='{"http-basic": {"${{vars.JF_HOST}}": {"username": "${{steps.setup-cli.outputs.oidc-user}}","password": "${{steps.setup-cli.outputs.oidc-token}}"}}}'
       - name: Docker Scan
         id: docker-scan
         run: |  
