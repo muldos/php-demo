@@ -64,6 +64,8 @@ jobs:
       - name: Build and Push Docker image
         uses: docker/build-push-action@v6
         id: build
+        env:
+          COMPOSER_AUTH: '{"http-basic": {"${{vars.JF_HOST}}": {"username": "${{steps.setup-cli.outputs.oidc-user}}","password": "${{steps.setup-cli.outputs.oidc-token}}"}}}'
         with:
             push: true
             provenance: false
