@@ -47,10 +47,13 @@ jobs:
             #args: "--prefer-dist --optimize-autoloader"
         env:
           COMPOSER_AUTH: '{"http-basic": {"${{vars.JF_HOST}}": {"username": "${{steps.setup-cli.outputs.oidc-user}}","password": "${{steps.setup-cli.outputs.oidc-token}}"}}}'
-      - name: Review install
+      - name: Review install & fix permissions
         id: review-php  
         run: |
           ls -al
+          sudo chown runner:docker -R ./var
+          sudo chown runner:docker -R ./vendor
+          ls -al 
       - name: Authenticate Docker
         uses: docker/login-action@v3
         with:
