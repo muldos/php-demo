@@ -90,4 +90,4 @@ jobs:
            echo ${{ vars.JF_HOST }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.ImageID }} > ./image-details.txt
            jf rt bdc ${{ env.DOCKER_REPO }} --image-file ./image-details.txt --build-name $JFROG_CLI_BUILD_NAME --build-number $GITHUB_RUN_NUMBER
            jf rt bp $JFROG_CLI_BUILD_NAME $GITHUB_RUN_NUMBER
-           jf rt bs $JFROG_CLI_BUILD_NAME $GITHUB_RUN_NUMBER
+           jf bs $JFROG_CLI_BUILD_NAME $GITHUB_RUN_NUMBER
